@@ -36,7 +36,6 @@
             </div>
         </div>
         <div class="modal fade" id="randomThought" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            {% i = 0 %}
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -45,9 +44,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {% i += 1 %}
-                    <p>{{thoughts[i].content}}</p>
-                    <p>{{thoughts[i].date}}</p>
                 </div>
                 </div>
             </div>
