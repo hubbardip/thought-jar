@@ -13,15 +13,18 @@ class Thought(db.Model):
 
     def __repr__(self):
         return f"<Thought {self.id}>"
+
+db.create_all()
+
 @app.route('/')
 def index():
-    thoughts = Thought.query.order_by(Thought.date_created).all()
-    return render_template('index.html', thoughts=thoughts)
+    #thoughts = Thought.query.order_by(Thought.date_created).all()
+    return render_template('index.html')
 
 @app.route('/new', methods=['POST'])
 def new():
     if request.method == "POST":
-        thought = request.form['name']
+        thought = request.form['thought']
         new_thought = Thought(content=thought)
 
         try:
@@ -32,10 +35,10 @@ def new():
             return 'Error adding thought'
 
         
-@app.route('/viewall')
+@app.route('/show')
 def view_all():
     thoughts = Thought.query.order_by(Thought.date_created).all()
-    return render_template('all_thoughts.html', thoughts=thoughts)
+    return render_template('show.html', thoughts=thoughts)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
