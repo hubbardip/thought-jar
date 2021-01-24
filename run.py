@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import random
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -13,6 +14,7 @@ class Thought(db.Model):
 
     def __repr__(self):
         return f"<Thought {self.id}>"
+
 @app.route('/')
 def index():
     thoughts = Thought.query.order_by(Thought.date_created).all()
@@ -36,6 +38,12 @@ def new():
 def view_all():
     thoughts = Thought.query.order_by(Thought.date_created).all()
     return render_template('all_thoughts.html', thoughts=thoughts)
+
+@app.route('/getrandom')
+def get_random():
+    rand = random.randrange(0, Thought.query(Thought).count()) 
+    thought = Thought.query(Thought)[rand].content
+    return render_template('random_thought.html', content = thought)
 
 if __name__ == "__main__":
     app.run()
