@@ -35,7 +35,6 @@ textarea:focus {
 }
 
 .modal-content {
-    background-image: url("https://tse3.mm.bing.net/th?id=OIP.QezhPS6ofRh3-TwjkmvDfgHaFk&pid=Api");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -47,4 +46,18 @@ textarea:focus {
 
 .modal-header {
     border: none;
+}
+
+.paper {
+    background-image: url("https://tse3.mm.bing.net/th?id=OIP.QezhPS6ofRh3-TwjkmvDfgHaFk&pid=Api");
+}
+
+#delete-button {
+    color: red;
+}
+
+#delete-button:hover {
+    text-decoration: none;
+    border: none;
+    color: darkred;
 }
