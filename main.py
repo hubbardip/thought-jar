@@ -83,7 +83,7 @@ def login():
                 session['logged_in'] = True
                 session['user'] = user.id
                 print(session)
-                return redirect(url_for('index'))
+                return redirect('/')
             else:
                 error = 'Invalid credentials.'
         else:
@@ -96,13 +96,13 @@ def login():
 def logout():
     session.pop('user', None)
     session['logged_in']=False
-    return redirect(url_for('index'))
+    return redirect('/')
 
 @app.route('/new', methods=['POST'])
 def new():
     if request.method == "POST":
         thought = request.form['thought']
-        new_thought = Thought(content=thought,user=session['user'])
+        new_thought = Thought(content=thought,userid=session['user'])
 
         try:
             db.session.add(new_thought)
@@ -113,7 +113,7 @@ def new():
 
 @app.route('/show')
 def view_all():
-    thoughts = Thought.query.order_by(Thought.date_created).all()
+    thoughts = Thought.query.filter_by(userid=session['user']).order_by(Thought.date_created).all()
     return render_template('show.html', thoughts=thoughts, logged_in=session['logged_in'])
 
 @app.route("/delete/<int:id>")
