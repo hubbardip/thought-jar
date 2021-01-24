@@ -5,6 +5,7 @@ import random
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config["SECRET_KEY"] = b"\xb7\x08\xa7\xf9-%\x01'\x99\xf7\xfb{3)\xa6T\x9c\xec:\xed\x11\x00\xd2;"
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -14,22 +15,42 @@ class User(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     thoughts = db.relationship('Thought', backref='user', lazy=True)
 
+    def json(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "password": self.password,
+            "date_created": self.date_created,
+            "thoughts": self.thoughts
+            }
+    
+
 class Thought(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(140), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     userid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    def json(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "date_created": self.date_created,
+            "userid": self.userid
+            }
+
     def __repr__(self):
         return f"<Thought {self.id}>"
+
+db.create_all()
 
 @app.route('/')
 def index():
     thoughts = Thought.query.order_by(Thought.date_created).all()
     random.shuffle(thoughts)
-    return render_template('index.html', thoughts=thoughts)
+    return render_template('index.html', thoughts=thoughts, logged_in=session['logged_in'])
 
-@app.route('signup', methods=['POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     error = None
     if request.method == 'POST':
@@ -40,13 +61,15 @@ def signup():
                 new_user = User(username=username,password=request.form['password'])
                 db.session.add(new_user)
                 db.session.commit()
-                session['user']=new_user
+                session['logged_in'] = True
+                session['user'] = new_user.id
                 return redirect('/')
-            except:
+            except Exception as e:
+                print(e)
                 return 'Error adding user.'
         else:
             error = 'Duplicate Username.'
-    return render_template('signup.html', error=error)
+    return render_template('signup.html', error=error, logged_in=session['logged_in'])
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -54,16 +77,19 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         user = User.query.filter_by(username=username).first()
-        if not user is None:
-            if user.password == session['password']:
+        if user is not None:
+            if user.password == request.form['password']:
                 session['logged_in'] = True
-                session['user'] = user
+                session['user'] = user.id
+                print(session)
                 return redirect(url_for('index'))
             else:
-                error = 'Invalid password.'
+                error = 'Invalid credentials.'
         else:
-            error = 'Invalid username.'
-    return render_template('login.html', error=error)
+            error = 'Invalid credentials.'
+    if error is None:
+        error = ""
+    return render_template('login.html', error=error, logged_in=session['logged_in'])
 
 @app.route('/logout')
 def logout():
@@ -87,7 +113,7 @@ def new():
 @app.route('/show')
 def view_all():
     thoughts = Thought.query.order_by(Thought.date_created).all()
-    return render_template('show.html', thoughts=thoughts)
+    return render_template('show.html', thoughts=thoughts, logged_in=session['logged_in'])
 
 @app.route("/delete/<int:id>")
 def delete(id):
