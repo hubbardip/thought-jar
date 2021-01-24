@@ -9,14 +9,16 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False)
+    username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(20), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    thoughts = db.relationship('Thought', backref='person', lazy=True)
 
 class Thought(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(140), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    userid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f"<Thought {self.id}>"
@@ -26,6 +28,24 @@ def index():
     thoughts = Thought.query.order_by(Thought.date_created).all()
     random.shuffle(thoughts)
     return render_template('index.html', thoughts=thoughts)
+
+@app.route('signup', methods=['POST'])
+def signup():
+    error = None
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        user = User.query.filter_by(username = session['username']).first()
+        if user is None:
+            try:
+                new_user = User(name=session['username'],password=request.form['password'])
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect('/')
+            except:
+                return 'Error adding user.'
+        else:
+            error = 'Duplicate Username.'
+    return render_template('signup.html', error=error)
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
