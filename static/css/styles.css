@@ -50,6 +50,7 @@ textarea:focus {
 
 .paper {
     background-image: url("https://tse3.mm.bing.net/th?id=OIP.QezhPS6ofRh3-TwjkmvDfgHaFk&pid=Api");
+    border: none;
 }
 
 .btn .btn-outline-danger:hover {
