@@ -8,6 +8,7 @@ db = SQLAlchemy(app)
 
 class Thought(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20))
     content = db.Column(db.String(140), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -18,7 +19,6 @@ db.create_all()
 
 @app.route('/')
 def index():
-    #thoughts = Thought.query.order_by(Thought.date_created).all()
     return render_template('index.html')
 
 @app.route('/new', methods=['POST'])
