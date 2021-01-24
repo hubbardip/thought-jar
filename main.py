@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import random
@@ -14,6 +14,16 @@ class Thought(db.Model):
 
     def __repr__(self):
         return f"<Thought {self.id}>"
+
+@app.route('login', methods = ['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if valid_login(request.form['username'], request.form['password']):
+            return log_the_user_in(request.form['username'])
+        else:
+            error = 'Invalid username/password.'
+    return render_template('login.html', error=error)
 
 @app.route('/')
 def index():
