@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, abort
+from flask import Flask, request, redirect, render_template, session, abort, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import random
@@ -30,6 +30,11 @@ def login():
         else:
             error = 'Invalid username/password.'
     return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
 @app.route('/')
 def index():
