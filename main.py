@@ -5,6 +5,7 @@ import random
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.static_folder = 'static'
 db = SQLAlchemy(app)
 
 class Thought(db.Model):
