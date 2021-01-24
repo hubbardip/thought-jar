@@ -32,12 +32,12 @@
             <h2>Your Jar</h2>
             <div class="row p-3 text-right">
                 {% for thought in thoughts %}
-                    <div class="paper col-3 handwriting mt-3">
-                        <button id="#delete-button" class="btn btn-danger bg-transparent mt-3 p-0">
-                            <a href="/delete/{{thought.id}}">X</a>
-                        </button>
-                        <textarea readonly class="handwriting w-100" rows="2">{{thought.content}}</textarea>
-                        <p class="m-0">Created {{thought.date_created.date()}}</p>
+                    <div class="col-4">
+                        <div class="paper col-12 handwriting mt-3">
+                            <a id="delete-thought" class="btn btn-outline-danger bg-transparent mt-3 p-0"href="/delete/{{thought.id}}">X</a>
+                            <textarea readonly class="handwriting w-100" rows="2">{{thought.content}}</textarea>
+                            <p class="m-0">Created {{thought.date_created.date()}}</p>
+                        </div>
                     </div>
                 {% endfor %}
             </div>

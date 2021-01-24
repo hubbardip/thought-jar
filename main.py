@@ -15,6 +15,13 @@ class Thought(db.Model):
     def __repr__(self):
         return f"<Thought {self.id}>"
 
+    def json(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "date_created": self.date_created
+            }
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -51,7 +58,7 @@ def delete(id):
 @app.route("/get_random")
 def get_random():
     thought = random.choice(Thought.query.order_by(Thought.date_created).all())
-    return jsonify(result=thought.content)
+    return jsonify(result=thought.json())
 
 if __name__ == "__main__":
     app.run(debug=True)

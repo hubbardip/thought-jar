@@ -52,12 +52,10 @@ textarea:focus {
     background-image: url("https://tse3.mm.bing.net/th?id=OIP.QezhPS6ofRh3-TwjkmvDfgHaFk&pid=Api");
 }
 
-#delete-button {
-    color: red;
+.btn .btn-outline-danger:hover {
+    color: darkred;
 }
 
-#delete-button:hover {
-    text-decoration: none;
-    border: none;
-    color: darkred;
+.navbar-brand:hover {
+    color: white;
 }
