@@ -1,11 +1,10 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import random
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-app.static_folder = 'static'
 db = SQLAlchemy(app)
 
 class Thought(db.Model):
@@ -18,9 +17,7 @@ class Thought(db.Model):
 
 @app.route('/')
 def index():
-    thoughts = Thought.query.order_by(Thought.date_created).all()
-    random.shuffle(thoughts)
-    return render_template('index.html', thoughts=thoughts)
+    return render_template('index.html')
 
 @app.route('/new', methods=['POST'])
 def new():
@@ -51,6 +48,10 @@ def delete(id):
     except:
         return "Error deleting thought"
 
+@app.route("/get_random")
+def get_random():
+    thought = random.choice(Thought.query.order_by(Thought.date_created).all())
+    return jsonify(result=thought.content)
 
 if __name__ == "__main__":
     app.run(debug=True)
