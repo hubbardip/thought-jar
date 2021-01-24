@@ -21,7 +21,7 @@ class Thought(db.Model):
     def __repr__(self):
         return f"<Thought {self.id}>"
 
-@app.route('login', methods = ['GET', 'POST'])
+@app.route('/login', methods = ['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
