@@ -12,7 +12,7 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(20), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    thoughts = db.relationship('Thought', backref='person', lazy=True)
+    thoughts = db.relationship('Thought', backref='user', lazy=True)
 
 class Thought(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,13 +33,14 @@ def index():
 def signup():
     error = None
     if request.method == 'POST':
-        session['username'] = request.form['username']
-        user = User.query.filter_by(username = session['username']).first()
+        username = request.form['username']
+        user = User.query.filter_by(username=username).first()
         if user is None:
             try:
-                new_user = User(name=session['username'],password=request.form['password'])
+                new_user = User(username=username,password=request.form['password'])
                 db.session.add(new_user)
                 db.session.commit()
+                session['user']=new_user
                 return redirect('/')
             except:
                 return 'Error adding user.'
@@ -51,29 +52,30 @@ def signup():
 def login():
     error = None
     if request.method == 'POST':
-        session['username'] = request.form['username']
-        user = User.query.filter_by(username = session['username']).first()
+        username = request.form['username']
+        user = User.query.filter_by(username=username).first()
         if not user is None:
             if user.password == session['password']:
                 session['logged_in'] = True
+                session['user'] = user
                 return redirect(url_for('index'))
             else:
                 error = 'Invalid password.'
-
         else:
             error = 'Invalid username.'
     return render_template('login.html', error=error)
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('user', None)
+    session['logged_in']=False
     return redirect(url_for('index'))
 
 @app.route('/new', methods=['POST'])
 def new():
     if request.method == "POST":
         thought = request.form['thought']
-        new_thought = Thought(content=thought)
+        new_thought = Thought(content=thought,user=session['user'])
 
         try:
             db.session.add(new_thought)
