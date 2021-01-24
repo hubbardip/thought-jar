@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, abort, url_for
+from flask import Flask, request, redirect, render_template, session, abort, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -47,9 +47,7 @@ db.create_all()
 
 @app.route('/')
 def index():
-    thoughts = Thought.query.order_by(Thought.date_created).all()
-    random.shuffle(thoughts)
-    return render_template('index.html', thoughts=thoughts, logged_in=get_logged_in())
+    return render_template('index.html', logged_in=get_logged_in())
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -70,6 +68,8 @@ def signup():
                 return 'Error adding user.'
         else:
             error = 'Duplicate Username.'
+    if error is None:
+        error = ""
     return render_template('signup.html', error=error, logged_in=get_logged_in())
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -127,11 +127,15 @@ def delete(id):
     except:
         return "Error deleting thought"
 
+@app.route("/get_random")
+def get_random():
+    thought = random.choice(Thought.query.order_by(Thought.date_created).all())
+    return jsonify(result=thought.content)
+
 def get_logged_in():
     if 'logged_in' in session:
         return session['logged_in']
     return False
-
 
 if __name__ == "__main__":
     app.run(debug=True)
