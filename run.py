@@ -13,19 +13,23 @@ class Thought(db.Model):
 
     def __repr__(self):
         return f"<Thought {self.id}>"
+@app.route('/')
+def index():
+    thoughts = Thought.query.order_by(Thought.date_created).all()
+    return render_template('index.html', thoughts=thoughts)
 
 @app.route('/new', methods=['POST'])
 def new():
     if request.method == "POST":
-        thought_content = request.form['content']
-        new_thought = Thought(content=thought_content)
+        thought = request.form['name']
+        new_thought = Thought(content=thought)
 
         try:
             db.session.add(new_thought)
             db.session.commit()
             return redirect('/')
         except:
-            return 'Error adding task'
+            return 'Error adding thought'
 
         
 @app.route('/viewall')
