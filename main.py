@@ -35,7 +35,7 @@ def new():
             return 'Error adding thought'
 
         
-@app.route('/show')
+@app.route('/show.html')
 def view_all():
     thoughts = Thought.query.order_by(Thought.date_created).all()
     return render_template('show.html', thoughts=thoughts)
