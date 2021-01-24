@@ -49,12 +49,12 @@ def new():
         except:
             return 'Error adding thought'
 
-@app.route('/viewall')
+@app.route('/viewall', methods=['GET'])
 def view_all():
     thoughts = Thought.query.order_by(Thought.date_created).all()
     return render_template('all_thoughts.html', thoughts=thoughts)
 
-@app.route('/getrandom')
+@app.route('/getrandom', methods=['GET'])
 def get_random():
     rand = random.randrange(0, Thought.query(Thought).count()) 
     thought = Thought.query(Thought)[rand].content
