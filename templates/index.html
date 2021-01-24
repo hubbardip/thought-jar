@@ -13,9 +13,8 @@
             $("#randomThought").on("shown.bs.modal", function(e) {
                 const getData = () => {
                     $.getJSON('/get_random', function(data) {
-                    $("p#rand-thought").text(data.result.content)
+                    $("p#rand-thought").text(data.result)
                     });
-                    $("p#rand-thought").append(data.result.date_created.date());
                     return false;
                 }
                 setTimeout(getData, 750);
