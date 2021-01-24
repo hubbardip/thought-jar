@@ -13,6 +13,10 @@ class Thought(db.Model):
 
     def __repr__(self):
         return f"<Thought {self.id}>"
+@app.route('/')
+def index():
+    thoughts = Thought.query.order_by(Thought.date_created).all()
+    return render_template('index.html', thoughts=thoughts)
 
 @app.route('/new', methods=['POST'])
 def new():
@@ -25,7 +29,7 @@ def new():
             db.session.commit()
             return redirect('/')
         except:
-            return 'Error adding task'
+            return 'Error adding thought'
 
         
 @app.route('/viewall')
