@@ -14,7 +14,7 @@
 	  });
 	  $("#randomThought").on("hidden.bs.modal", function(e) {
 	      $.getJSON('/get_random', function(data) {
-		  $("p#rand-thought").text("")
+		  $("p#rand-thought").text("Shaking the jar...")
 	      });
 	      return false;
 	  });
@@ -61,7 +61,7 @@
             </button>
           </div>
           <div class="modal-body">
-	    <p id="rand-thought"></p>
+	    <p id="rand-thought">Shaking the jar...</p>
           </div>
         </div>
       </div>
