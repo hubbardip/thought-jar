@@ -49,7 +49,7 @@ db.create_all()
 def index():
     thoughts = Thought.query.order_by(Thought.date_created).all()
     random.shuffle(thoughts)
-    return render_template('index.html', thoughts=thoughts, logged_in=session['logged_in'])
+    return render_template('index.html', thoughts=thoughts, logged_in=get_logged_in())
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -70,7 +70,7 @@ def signup():
                 return 'Error adding user.'
         else:
             error = 'Duplicate Username.'
-    return render_template('signup.html', error=error, logged_in=session['logged_in'])
+    return render_template('signup.html', error=error, logged_in=get_logged_in())
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -90,7 +90,7 @@ def login():
             error = 'Invalid credentials.'
     if error is None:
         error = ""
-    return render_template('login.html', error=error, logged_in=session['logged_in'])
+    return render_template('login.html', error=error, logged_in=get_logged_in())
 
 @app.route('/logout')
 def logout():
@@ -114,7 +114,7 @@ def new():
 @app.route('/show')
 def view_all():
     thoughts = Thought.query.filter_by(userid=session['user']).order_by(Thought.date_created).all()
-    return render_template('show.html', thoughts=thoughts, logged_in=session['logged_in'])
+    return render_template('show.html', thoughts=thoughts, logged_in=get_logged_in())
 
 @app.route("/delete/<int:id>")
 def delete(id):
@@ -126,6 +126,11 @@ def delete(id):
         return redirect('/')
     except:
         return "Error deleting thought"
+
+def get_logged_in():
+    if 'logged_in' in session:
+        return session['logged_in']
+    return False
 
 
 if __name__ == "__main__":
