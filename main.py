@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, abort, url_for
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import random
 
@@ -58,7 +59,7 @@ def signup():
         user = User.query.filter_by(username=username).first()
         if user is None:
             try:
-                new_user = User(username=username,password=request.form['password'])
+                new_user = User(username=username,password=generate_password_hash(request.form['password']))
                 db.session.add(new_user)
                 db.session.commit()
                 session['logged_in'] = True
@@ -78,7 +79,7 @@ def login():
         username = request.form['username']
         user = User.query.filter_by(username=username).first()
         if user is not None:
-            if user.password == request.form['password']:
+            if check_password_hash(user.password, request.form['password']):
                 session['logged_in'] = True
                 session['user'] = user.id
                 print(session)
