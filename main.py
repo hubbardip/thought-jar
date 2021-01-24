@@ -24,6 +24,7 @@ class Thought(db.Model):
 @app.route('/')
 def index():
     thoughts = Thought.query.order_by(Thought.date_created).all()
+    random.shuffle(thoughts)
     return render_template('index.html', thoughts=thoughts)
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -51,7 +52,7 @@ def logout():
 @app.route('/new', methods=['POST'])
 def new():
     if request.method == "POST":
-        thought = request.form['name']
+        thought = request.form['thought']
         new_thought = Thought(content=thought)
 
         try:
@@ -61,16 +62,22 @@ def new():
         except:
             return 'Error adding thought'
 
-@app.route('/viewall', methods=['GET'])
+@app.route('/show')
 def view_all():
     thoughts = Thought.query.order_by(Thought.date_created).all()
-    return render_template('all_thoughts.html', thoughts=thoughts)
+    return render_template('show.html', thoughts=thoughts)
 
-@app.route('/getrandom', methods=['GET'])
-def get_random():
-    rand = random.randrange(0, Thought.query(Thought).count()) 
-    thought = Thought.query(Thought)[rand].content
-    return render_template('random_thought.html', content = thought)
+@app.route("/delete/<int:id>")
+def delete(id):
+    to_delete = Thought.query.get_or_404(id)
+
+    try:
+        db.session.delete(to_delete)
+        db.session.commit()
+        return redirect('/')
+    except:
+        return "Error deleting thought"
+
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
