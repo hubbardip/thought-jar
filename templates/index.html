@@ -29,8 +29,23 @@
         </script>
     </head>
     <body>
-        <nav class="navbar navbar-light">
-                <a class="navbar-brand" href="/">Thoughts Jar</a>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="/">Thoughts Jar</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-0 ml-auto">
+                    <li class="nav-item">
+            {% if logged_in %}
+                <a class="nav-link" href="/logout">Log out</a>
+            {% else %}
+                <a class="nav-link" href="/login">Login</a>
+            {% endif %}
+            <p>{{ logged_in }}</p>
+            </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
         </nav>
         <div class="container-fluid p-4">
             <h3>What would you like to do?</h3>
