@@ -21,25 +21,32 @@ class Thought(db.Model):
     def __repr__(self):
         return f"<Thought {self.id}>"
 
+@app.route('/')
+def index():
+    thoughts = Thought.query.order_by(Thought.date_created).all()
+    return render_template('index.html', thoughts=thoughts)
+
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        if valid_login(request.form['username'], request.form['password']):
-            return log_the_user_in(request.form['username'])
+        session['username'] = request.form['username']
+        user = User.query.filter_by(username = session['username']).first()
+        if not user is None:
+            if user.password == session['password']:
+                session['logged_in'] = True
+                return redirect(url_for('index'))
+            else:
+                error = 'Invalid password.'
+
         else:
-            error = 'Invalid username/password.'
+            error = 'Invalid username.'
     return render_template('login.html', error=error)
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
-
-@app.route('/')
-def index():
-    thoughts = Thought.query.order_by(Thought.date_created).all()
-    return render_template('index.html', thoughts=thoughts)
 
 @app.route('/new', methods=['POST'])
 def new():
