@@ -15,6 +15,7 @@
                 <div class="col-4">
                     <p>{{thought.content}}</p>
                     <p>Created {{thought.date_created}}</p>
+                    <a class="btn btn-outline-danger" href="/delete/{{thought.id}}">Delete Thought</a>
                 </div>
             {% endfor %}
         </div>
