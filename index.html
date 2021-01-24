@@ -7,12 +7,12 @@
     </head>
     <body>
         <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="#">Thoughts Jar</a>
+            <a class="navbar-brand" href="/">Thoughts Jar</a>
         </nav>
         <h3>What would you like to do?</h3>
         <div class="row">
             <button type="button" class="col-4 btn btn-outline-primary" data-toggle="modal" data-target="#newThought">Create a Thought</button>
-            <a type="button" class="col-4 btn btn-outline-primary" id="viewThoughts" href="./show.html">View Thoughts</a>
+            <a type="button" class="col-4 btn btn-outline-primary" id="viewThoughts" href="/show">View Thoughts</a>
             <button type="button" class="col-4 btn btn-outline-primary" data-toggle="modal" data-target="#randomThought">Choose a Random Thought</button>
         </div>
         <div class="modal fade" id="newThought" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -36,6 +36,7 @@
             </div>
         </div>
         <div class="modal fade" id="randomThought" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            {% i = 0 %}
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -44,8 +45,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>{{random_thought.content}}</p>
-                    <p>{{random_thought.date}}</p>
+                    {% i += 1 %}
+                    <p>{{thoughts[i].content}}</p>
+                    <p>{{thoughts[i].date}}</p>
                 </div>
                 </div>
             </div>
