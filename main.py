@@ -129,7 +129,7 @@ def delete(id):
 
 @app.route("/get_random")
 def get_random():
-    thought = random.choice(Thought.query.order_by(Thought.date_created).all())
+    thought = random.choice(Thought.query.filter_by(userid=session['user']).order_by(Thought.date_created).all())
     return jsonify(result=thought.content)
 
 def get_logged_in():

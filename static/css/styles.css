@@ -1,0 +1,62 @@
+body {
+    background-image: url("../images/Thought_Jar.png");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: "Courgette", cursive, sans-serif;
+}
+
+textarea {
+    background: transparent;
+    border: none;
+    resize: none;
+}
+
+textarea:focus {
+    outline: 0;
+}
+
+.btn {
+    background-color: #a8c686;
+    border: none;
+}
+
+.btn:hover {
+    background-color: #789655;
+}
+
+.close:focus {
+    outline: none;
+}
+
+.handwriting {
+    font-family: "Kalam", cursive, sans-serif;
+}
+
+.modal-content {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.modal-dialog {
+    padding-top: 15%;
+}
+
+.modal-header {
+    border: none;
+}
+
+.paper {
+    background-image: url("https://tse3.mm.bing.net/th?id=OIP.QezhPS6ofRh3-TwjkmvDfgHaFk&pid=Api");
+    border: none;
+}
+
+.btn .btn-outline-danger:hover {
+    color: darkred;
+}
+
+.navbar-brand:hover {
+    color: white;
+}
